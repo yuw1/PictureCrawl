@@ -30,6 +30,7 @@ def getImg(allImgList, imgNum):
             thisImg = Image(html, localImgNum, allImgList, imgNum)
             localImgNum, allImgList = thisImg.getImg()
 
+
 if __name__ == "__main__":
     urlQueue = queue.Queue()
     urlImgQueue = queue.Queue()
@@ -43,13 +44,11 @@ if __name__ == "__main__":
     urlNum = 0
     imgNum = 0
 
-    getHtml(urlNum,allUrlList,urlImgQueue,urlQueue)
-
-
+    getHtml(urlNum, allUrlList, urlImgQueue, urlQueue)
 
     threadingList = []
     for i in range(10):
-        t = threading.Thread(target=getImg, name='LoopThread',args=(allImgList,i*10))
+        t = threading.Thread(target=getImg, name='LoopThread', args=(allImgList, i * 10))
         t.start()
         threadingList.append(t)
     for t in threadingList:

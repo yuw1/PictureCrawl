@@ -18,14 +18,9 @@ class Image:
             if (len(imglist)):
                 for i in range(len(imglist)):
                     imglist[i]='http://www.fzlu.com' +imglist[i]
-                # for imgurl in imglist:
-                #     for allImgUrl in self.allImgList:
-                #         if (imgurl == allImgUrl):
-                #             imglist.remove(imgurl)
-                print(imglist)
                 for imgurl in imglist:
                     try:
-                        self.num = self.num + 1
+
                         request.urlretrieve(imgurl, 'E:/photo/%d.jpg' % (self.num + self.baseImgNum))
                         print('已保存第%d张图片' % (self.num + self.baseImgNum))
                         print(threading.current_thread())
