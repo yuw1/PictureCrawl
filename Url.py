@@ -1,6 +1,6 @@
 import re
 
-class getUrl():
+class Url():
     def __init__(self,html,allUrlList,urlQueue,urlImgQueue,urlNum):
         self.html=html
         self.allUrlList=allUrlList
@@ -8,14 +8,15 @@ class getUrl():
         self.urlImgQueue=urlImgQueue
         self.urlNum=urlNum
     def getUrl(self):
-        reg = r"href='(/meinvtupian.+?\html|/mingxingtupian.+?\html)'"
+        html = self.html.decode('gbk')
+        reg = r"href='(/fengjingtupian/.+html)'"
         urlre = re.compile(reg)
-        urllist = re.findall(urlre, self.html)
+        urllist = re.findall(reg, html)
         if(urllist!=None):
             for i in range(len(urllist)):
                 urllist[i]='http://www.fzlu.com' + urllist[i]
-            print urllist
-            print self.allUrlList
+            print(urllist)
+            print(self.allUrlList)
             newAllUrlList=list(set(urllist+self.allUrlList))
             urllist=list(set(newAllUrlList)-set(self.allUrlList))
             for url in urllist:
@@ -23,7 +24,7 @@ class getUrl():
                 self.urlQueue.put(url)
                 self.urlImgQueue.put(url)
             self.urlNum=self.urlNum + len(urllist)
-            print self.urlNum
+            print(self.urlNum)
 
         return self.allUrlList,self.urlQueue,self.urlImgQueue,self.urlNum
 

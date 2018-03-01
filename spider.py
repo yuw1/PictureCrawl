@@ -1,37 +1,56 @@
-import Queue
+import queue
+import threading
 
-from getHtml import getHtml
-from getImg import getImg
-from getUrl import getUrl
+from Html import Html
+from Image import Image
+from Url import Url
 
-urlQueue=Queue.Queue()
-urlImgQueue=Queue.Queue()
-allUrlList=[]
-allImgList=[]
 
-urlQueue.put('http://www.fzlu.com/meinvtupian/20154371.html')
-urlImgQueue.put('http://www.fzlu.com/meinvtupian/20154371.html')
-allUrlList.append('http://www.fzlu.com/meinvtupian/20154371.html')
+def getHtml(urlNum, allUrlList, urlImgQueue, urlQueue):
+    while (urlNum < 20 and urlQueue.not_empty):
+        url = urlQueue.get()
 
-urlNum = 0
-imgNum = 0
+        thisHtml = Html(url)
+        html = thisHtml.getHtml()
 
-while(urlNum<200 and urlQueue.not_empty):
-    url=urlQueue.get()
+        if (html != None):
+            thisUrl = Url(html, allUrlList, urlQueue, urlImgQueue, urlNum)
+            allUrlList, urlQueue, urlImgQueue, urlNum = thisUrl.getUrl()
 
-    thisHtml = getHtml(url)
-    html = thisHtml.getHtml()
 
-    if(html!=None):
-        thisUrl=getUrl(html,allUrlList,urlQueue,urlImgQueue,urlNum)
-        allUrlList,urlQueue,urlImgQueue,urlNum=thisUrl.getUrl()
+def getImg(allImgList, imgNum):
+    localImgNum = 0
+    while (localImgNum < 10 and urlImgQueue.not_empty):
+        url = urlImgQueue.get()
 
-while(imgNum<1000 and urlImgQueue.not_empty):
-    url = urlImgQueue.get()
+        thisHtml = Html(url)
+        html = thisHtml.getHtml()
 
-    thisHtml = getHtml(url)
-    html = thisHtml.getHtml()
+        if (html != None):
+            thisImg = Image(html, localImgNum, allImgList, imgNum)
+            localImgNum, allImgList = thisImg.getImg()
 
-    if (html != None):
-        thisImg = getImg(html, imgNum, allImgList)
-        imgNum, allImgList = thisImg.getImg()
+if __name__ == "__main__":
+    urlQueue = queue.Queue()
+    urlImgQueue = queue.Queue()
+    allUrlList = []
+    allImgList = []
+
+    urlQueue.put('http://www.fzlu.net/fengjingtupian/20158799.html')
+    urlImgQueue.put('http://www.fzlu.net/fengjingtupian/20158799.html')
+    allUrlList.append('http://www.fzlu.net/fengjingtupian/20158799.html')
+
+    urlNum = 0
+    imgNum = 0
+
+    getHtml(urlNum,allUrlList,urlImgQueue,urlQueue)
+
+
+
+    threadingList = []
+    for i in range(10):
+        t = threading.Thread(target=getImg, name='LoopThread',args=(allImgList,i*10))
+        t.start()
+        threadingList.append(t)
+    for t in threadingList:
+        t.join()

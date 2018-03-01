@@ -1,15 +1,15 @@
 #encoding=utf-8
-import urllib
+from urllib import request
 
 
-class getHtml:
+class Html:
     def __init__(self,url):
         self.url=url
     def getHtml(self):
         try:
-            page = urllib.urlopen(self.url)
+            page = request.urlopen(self.url)
             html = page.read()
             return html
-        except Exception, e:
-            print "获取网页失败"
+        except Exception as e:
+            print("获取网页失败")
             return None
